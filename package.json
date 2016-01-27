@@ -1,0 +1,15 @@
+{
+  "name": "linksync-command",
+  "productName": "LinkSync Commander",
+  "identifier": "net.lakesite.linksync-command",
+  "description": "Command line interface to LinkSync",
+  "version": "0.0.1",
+  "author": "Andrew Duncan",
+  "copyright": "Copyright 2016 Andrew Duncan",
+  "main": "linksync.js",
+  "dependencies": {
+    "commander": "~2.9.0",
+    "request": "~2.67.0",
+    "prettyjson": "~1.1.3"
+  }
+}
