@@ -4,8 +4,8 @@ Command line interface to LinkSync.
 
 ## Running ##
 
-  $ npm install
-  $ node --harmony linksync.js --help
+	$ npm install
+	$ node --harmony linksync.js --help
 
 ## Examples ##
 

@@ -7,9 +7,6 @@
   "author": "Andrew Duncan",
   "copyright": "Copyright 2016 Andrew Duncan",
   "main": "linksync.js",
-  "scripts": {
-    "start": "node ."
-  },
   "dependencies": {
     "commander": "~2.9.0",
     "request": "~2.67.0",
