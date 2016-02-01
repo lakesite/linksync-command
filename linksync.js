@@ -148,19 +148,11 @@ program
   .command('find [url]')
   .description('Find links similar to [url]')
   .action(function(url, options) {
-    request.get(
-      API + '/links/findOne?filter[where][url][like]=' + url,
-      {
-        json: true
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log(prettyjson.render(body));
-        } else {
-          console.log('Error listing links: %s', JSON.stringify(body));
-        }
-      }
-    );
+    linklib.find_by_url(url).then(function(response) {
+      console.log(prettyjson.render(response));
+    }).catch(function(e) {
+      console.log('Error adding link: ' + e.error.message);
+    });
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
