@@ -21,16 +21,15 @@
 
 
 const
-  program = require('commander'),
-  request = require('request'),
   prettyjson = require('prettyjson'),
+  program = require('commander'),
   q = require('q'),
+  request = require('request'),
 
   linklib = require('./lib/links'),
-  taglib = require('./lib/tags'),
   linktaglib = require('./lib/linktags'),
-
-  API = 'http://localhost:5979/api';
+  settings = require('./lib/settings'),
+  taglib = require('./lib/tags');
 
 
 function option_list(val) {
@@ -100,7 +99,7 @@ program
       formData['description'] = options.description;
 
     request.put(
-      API + '/links/' + id,
+      settings.API + '/links/' + id,
       {
         json: formData,
       },
@@ -123,6 +122,9 @@ program
   .command('remove [id]')
   .description('Remove a link by id')
   .action(function(id, options) {
+    // needs to cascade delete from LinkTags
+    // https://github.com/strongloop/loopback-datasource-juggler/issues/145
+    // https://gist.github.com/zbarbuto/add938efd9653c7c6c14
     linklib.delete_by_id(id).then(function(response) {
       console.log('Link removed, response: %s', JSON.stringify(response));
     }).catch(function(e) {
@@ -238,7 +240,7 @@ program
   .description('List links saved to the system')
   .action(function(options) {
     request.get(
-      API + '/links',
+      settings.API + '/links',
       {
         json: true
       },

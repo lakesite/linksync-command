@@ -2,6 +2,11 @@
 
 Command line interface to LinkSync.
 
+# Settings #
+
+The API endpoint is defined under lib/settings.js, along with any other changes.
+By default this is http://localhost:5979/api
+
 ## Running ##
 
 	$ npm install
