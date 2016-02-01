@@ -174,57 +174,28 @@ program
     var got_option = false;
     if (options.add) {
       got_option = true;
-      request.post(
-        API + '/tags',
-        {
-          json: {
-            name: options.add
-          }
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log('Tag(s) added, response: %s', JSON.stringify(body));
-          } else {
-            console.log('Error adding tags: %s', JSON.stringify(body));
-          }
-        }
-      );
+      taglib.add_tag(options.add).then(function(tag) {
+        console.log('Tag(s) added, response: %s', JSON.stringify(tag));
+      }).catch(function(e) {
+        console.log('Error adding tag: ' + e.error.message);
+      });
     }
 
     if (options.find) {
       got_option = true;
-      request.get(
-        API + '/tags/findOne?filter[where][name][like]=' + options.find,
-        {
-          json: true
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log(prettyjson.render(body));
-          } else if (response.statusCode == 404) {
-            console.log('No tags found matching that name.');
-          } else {
-            console.log('Error listing tags: %s', JSON.stringify(body));
-          }
-        }
-      );
+      taglib.tag_by_name(options.find).then(function(tag) {
+        console.log(prettyjson.render(tag));
+      }).catch(function(e) {
+        console.log('Error finding tag: ' + e.error.message);
+      });
     }
 
     if (options.get) {
       got_option = true;
-      request.get(
-        API + '/tags/' + options.get,
-        {
-          json: true
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log('Response: %s', JSON.stringify(body));
-          } else if (response.statusCode == 404) {
-            console.log('No such tag with that ID');
-          } else {
-            console.log('Error fetching tag: %s', JSON.stringify(body));
-          }
+      taglib.tag_by_id(options.get).then(function(tag) {
+        console.log(prettyjson.render(tag));
+      }).catch(function(e) {
+        console.log('Error finding tag: ' + e.error.message);
       });
     }
 
