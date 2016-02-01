@@ -1,4 +1,4 @@
-# linksync-command #
+# linksync-commander #
 
 Command line interface to LinkSync.
 

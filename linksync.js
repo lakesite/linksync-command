@@ -24,6 +24,11 @@ const
   program = require('commander'),
   request = require('request'),
   prettyjson = require('prettyjson'),
+  q = require('q'),
+
+  linklib = require('./lib/links'),
+  taglib = require('./lib/tags'),
+  linktaglib = require('./lib/linktags'),
 
   API = 'http://localhost:5979/api';
 
@@ -38,22 +43,23 @@ program
   .description('Add a url with a description')
   .option("-t, --tag [tag1,tag2,...]", "optional comma separated tag association")
   .action(function(url, description, options) {
-    request.post(
-      API + '/links',
-      {
-        json: {
-          url: url,
-          description: description
-        }
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log('Link added, response: %s', JSON.stringify(body));
-        } else {
-          console.log('Error adding link: %s', JSON.stringify(body));
-        }
+    var tags = [];
+    var link_id = "";
+
+    linklib.add_link(url, description).then(function(link) {
+      return link;
+    }).then(function(link) {
+      if (options.tag) {
+        taglib.add_tags(option_list(options.tag)).then(function(tags) {
+          linktaglib.add_linktags(link.id, tags);
+        });
       }
-    );
+      return link;
+    }).then(function(link) {
+      console.log('Link created: ' + JSON.stringify(link));
+    }).catch(function(e) {
+      console.log('Error adding link: ' + e.error.message);
+    });
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
