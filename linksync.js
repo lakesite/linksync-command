@@ -73,19 +73,12 @@ program
   .command('get [id]')
   .description('Get all information about a link by its id')
   .action(function(id, options) {
-    request.get(
-      API + '/links/' + id,
-      {
-        json: true
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log(prettyjson.render(body));
-        } else {
-          console.log('Error fetching link: %s', JSON.stringify(body));
-        }
-      }
-  )}).on('--help', function() {
+    linklib.get_link(id).then(function(link) {
+      console.log(prettyjson.render(link));
+    }).catch(function(e) {
+      console.log('Error getting link: ' + e.error.message);
+    });
+  }).on('--help', function() {
       console.log('  Examples:');
       console.log();
       console.log('    $ linksync get 1');
