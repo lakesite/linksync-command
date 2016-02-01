@@ -121,21 +121,13 @@ program
 
 program
   .command('remove [id]')
-  .description('Remove a url by id')
+  .description('Remove a link by id')
   .action(function(id, options) {
-    request.del(
-      API + '/links/' + id,
-      {
-        json: true
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log('Link removed, response: %s', JSON.stringify(body));
-        } else {
-          console.log('Error removing link: %s', JSON.stringify(body));
-        }
-      }
-    );
+    linklib.delete_by_id(id).then(function(response) {
+      console.log('Link removed, response: %s', JSON.stringify(response));
+    }).catch(function(e) {
+      console.log('Error removing link: '+ e.error.message);
+    });
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
