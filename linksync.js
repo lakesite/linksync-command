@@ -195,44 +195,27 @@ program
       taglib.tag_by_id(options.get).then(function(tag) {
         console.log(prettyjson.render(tag));
       }).catch(function(e) {
-        console.log('Error finding tag: ' + e.error.message);
+        console.log('Error getting tag: ' + e.error.message);
       });
     }
 
     if (options.delete) {
       got_option = true;
-      request.del(
-        API + '/tags/' + options.delete,
-        {
-          json: true
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log('Tag removed, response: %s', JSON.stringify(body));
-          } else {
-            console.log('Error removing tag: %s', JSON.stringify(body));
-          }
+      taglib.delete_by_id(options.delete).then(function(tag) {
+        console.log('Tag removed, response: %s', JSON.stringify(tag));
+      }).catch(function(e) {
+        console.log('Error removing tag: ' + e.error.message);
       });
     }
 
     var rename = options.rename;
     if (rename) {
       got_option = true;
-      request.put(
-        API + '/tags/' + options.rename[0],
-        {
-          json: {
-            name: options.rename[1]
-          }
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log('Tag renamed, response: %s', JSON.stringify(body));
-          } else {
-            console.log('Error renaming tag: %s', JSON.stringify(body));
-          }
-        }
-      );
+      taglib.rename_by_id(options.rename[0], options.rename[1]).then(function(tag) {
+        console.log('Tag renamed, response: %s', JSON.stringify(tag));
+      }).catch(function(e) {
+        console.log('Error renaming tag: ' + e.error.message);
+      });
     }
 
     if (!got_option) {
@@ -240,19 +223,11 @@ program
     }
 
     if (options.list) {
-      request.get(
-        API + '/tags',
-        {
-          json: true
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            console.log(prettyjson.render(body));
-          } else {
-            console.log('Error listing tags: %s', JSON.stringify(body));
-          }
-        }
-      );
+      taglib.get_tags().then(function(tags) {
+        console.log(prettyjson.render(tags));
+      }).catch(function(e) {
+        console.log('Error listing tags: ' + e.error.message);
+      });
     }
   }).on('--help', function() {
     console.log('  Examples:');
