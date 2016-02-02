@@ -158,15 +158,22 @@ program
   .command('findtag [tags]')
   .description('Find links associated with tags')
   .action(function(tags, options) {
-    linklib.find_by_tags(option_list(tags)).then(function(response) {
-      console.log(prettyjson.render(response));
+    var tagset = option_list(tags);
+    linklib.find_by_tags(tagset).then(function(response) {
+      var tagindex = 0;
+      response.forEach(function(links) {
+        console.log("Links associated with '" + tagset[tagindex] + "':\n");
+        console.log(prettyjson.render(links));
+        console.log();
+        tagindex++;
+      });
     }).catch(function(e) {
-      console.log('Error adding link: ' + e.error.message);
+      console.log('Error finding tag: ' + e.error.message);
     });
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
-    console.log('    $ linksync find somedomain');
+    console.log('    $ linksync findtag random,foo');
     console.log();
   });
 
