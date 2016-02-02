@@ -156,7 +156,7 @@ program
 
 program
   .command('findtag [tags]')
-  .description('Find links similar to [url]')
+  .description('Find links associated with tags')
   .action(function(tags, options) {
     linklib.find_by_tags(option_list(tags)).then(function(response) {
       console.log(prettyjson.render(response));
