@@ -137,12 +137,28 @@ program
     console.log();
   });
 
+  program
+    .command('findurl [url]')
+    .description('Find links similar to [url]')
+    .action(function(url, options) {
+      linklib.find_by_url(url).then(function(response) {
+        console.log(prettyjson.render(response));
+      }).catch(function(e) {
+        console.log('Error adding link: ' + e.error.message);
+      });
+    }).on('--help', function() {
+      console.log('  Examples:');
+      console.log();
+      console.log('    $ linksync find somedomain');
+      console.log();
+    });
+
 
 program
-  .command('find [url]')
+  .command('findtag [tags]')
   .description('Find links similar to [url]')
-  .action(function(url, options) {
-    linklib.find_by_url(url).then(function(response) {
+  .action(function(tags, options) {
+    linklib.find_by_tags(option_list(tags)).then(function(response) {
       console.log(prettyjson.render(response));
     }).catch(function(e) {
       console.log('Error adding link: ' + e.error.message);
