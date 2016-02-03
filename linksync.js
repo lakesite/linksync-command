@@ -87,43 +87,42 @@ program
       console.log('Error getting link: ' + e.error.message);
     });
   }).on('--help', function() {
-      console.log('  Examples:');
-      console.log();
-      console.log('    $ linksync get 1');
-      console.log();
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync get 1');
+    console.log();
   });
 
 
 program
   .command('update [id]')
   .option("-t, --tag [tag1,tag2,...]", "optional new comma separated tag associations")
+  .option("-g, --group [group1,group2,...]", "optional new comma separated group associations")
   .option("-d, --description [description]", "optional new description")
   .option("-u, --url [url]", "optional new url")
   .description('Update a link by its id')
   .action(function(id, options) {
-    var formData = {};
-    if (options.url)
-      formData['url'] = options.url;
-    if (options.description)
-      formData['description'] = options.description;
+    if (options.tag) {
+      taglib.add_tags(option_list(options.tag)).then(function(tags) {
+        linktaglib.add_linktags(id, tags);
+      });
+    }
+    if (options.group) {
+      grouplib.add_groups(option_list(options.group)).then(function(groups) {
+        linkgrouplib.add_linkgroups(id, groups);
+      });
+    }
 
-    request.put(
-      settings.API + '/links/' + id,
-      {
-        json: formData,
-      },
-      function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log(prettyjson.render(body));
-        } else {
-          console.log('Error fetching link: %s', JSON.stringify(body));
-        }
-      }
-  )}).on('--help', function() {
-      console.log('  Examples:');
-      console.log();
-      console.log('    $ linksync update 1 -t foo -d "now with more foo"');
-      console.log();
+    linklib.update_link(id, options.url, options.description).then(function(response) {
+      console.log('Updated link, response: ' + JSON.stringify(response));
+    }).catch(function(e) {
+      console.log('Error updating link: ' + e.error.message);
+    });
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync update 1 -t foo -d "now with more foo"');
+    console.log();
   });
 
 
