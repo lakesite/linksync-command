@@ -27,9 +27,11 @@ const
   request = require('request'),
 
   linklib = require('./lib/links'),
+  grouplib = require('./lib/groups'),
+  taglib = require('./lib/tags'),
+  linkgrouplib = require('./lib/linkgroups'),
   linktaglib = require('./lib/linktags'),
-  settings = require('./lib/settings'),
-  taglib = require('./lib/tags');
+  settings = require('./lib/settings');
 
 
 function option_list(val) {
@@ -41,8 +43,10 @@ program
   .command('add [url] [description]')
   .description('Add a url with a description')
   .option("-t, --tag [tag1,tag2,...]", "optional comma separated tag association")
+  .option("-g, --group [group1,group2,...]", "optional comma separated group association")
   .action(function(url, description, options) {
     var tags = [];
+    var groups = [];
     var link_id = "";
 
     linklib.add_link(url, description).then(function(link) {
@@ -51,6 +55,11 @@ program
       if (options.tag) {
         taglib.add_tags(option_list(options.tag)).then(function(tags) {
           linktaglib.add_linktags(link.id, tags);
+        });
+      }
+      if (options.group) {
+        grouplib.add_groups(option_list(options.group)).then(function(groups) {
+          linkgrouplib.add_linkgroups(link.id, groups);
         });
       }
       return link;
@@ -137,21 +146,21 @@ program
     console.log();
   });
 
-  program
-    .command('findurl [url]')
-    .description('Find links similar to [url]')
-    .action(function(url, options) {
-      linklib.find_by_url(url).then(function(response) {
-        console.log(prettyjson.render(response));
-      }).catch(function(e) {
-        console.log('Error adding link: ' + e.error.message);
-      });
-    }).on('--help', function() {
-      console.log('  Examples:');
-      console.log();
-      console.log('    $ linksync find somedomain');
-      console.log();
+program
+  .command('findurl [url]')
+  .description('Find links similar to [url]')
+  .action(function(url, options) {
+    linklib.find_by_url(url).then(function(response) {
+      console.log(prettyjson.render(response));
+    }).catch(function(e) {
+      console.log('Error adding link: ' + e.error.message);
     });
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync find somedomain');
+    console.log();
+  });
 
 
 program
@@ -174,6 +183,110 @@ program
     console.log('  Examples:');
     console.log();
     console.log('    $ linksync findtag random,foo');
+    console.log();
+  });
+
+
+program
+  .command('findgroup [groups]')
+  .description('Find links associated with groups')
+  .action(function(groups, options) {
+    var groupset = option_list(groups);
+    linklib.find_by_groups(groupset).then(function(response) {
+      var groupindex = 0;
+      response.forEach(function(links) {
+        console.log("Links associated with '" + groupset[groupindex] + "':\n");
+        console.log(prettyjson.render(links));
+        console.log();
+        tagindex++;
+      });
+    }).catch(function(e) {
+      console.log('Error finding tag: ' + e.error.message);
+    });
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync findgroup work,news');
+    console.log();
+  });
+
+
+program
+  .command('groups')
+  .description('Manage groups saved to the system')
+  .option("-a, --add [group]", "add a group")
+  .option("-g, --get [id]", "get a group by id")
+  .option("-d, --delete [id]", "delete group by id")
+  .option("-r, --rename [id],[name]", "renames group with id to new name", option_list)
+  .option("-l, --list", "lists groups")
+  .option("-f, --find [group]", "Find groups similar to [group]")
+  .action(function(options) {
+    var got_option = false;
+    if (options.add) {
+      got_option = true;
+      grouplib.add_group(options.add).then(function(group) {
+        console.log('Group(s) added, response: %s', JSON.stringify(group));
+      }).catch(function(e) {
+        console.log('Error adding group: ' + e.error.message);
+      });
+    }
+
+    if (options.find) {
+      got_option = true;
+      grouplib.group_by_name(options.find).then(function(group) {
+        console.log(prettyjson.render(group));
+      }).catch(function(e) {
+        console.log('Error finding group: ' + e.error.message);
+      });
+    }
+
+    if (options.get) {
+      got_option = true;
+      grouplib.group_by_id(options.get).then(function(group) {
+        console.log(prettyjson.render(group));
+      }).catch(function(e) {
+        console.log('Error getting group: ' + e.error.message);
+      });
+    }
+
+    if (options.delete) {
+      got_option = true;
+      grouplib.delete_by_id(options.delete).then(function(group) {
+        console.log('Group removed, response: %s', JSON.stringify(group));
+      }).catch(function(e) {
+        console.log('Error removing group: ' + e.error.message);
+      });
+    }
+
+    var rename = options.rename;
+    if (rename) {
+      got_option = true;
+      grouplib.rename_by_id(options.rename[0], options.rename[1]).then(function(group) {
+        console.log('Group renamed, response: %s', JSON.stringify(group));
+      }).catch(function(e) {
+        console.log('Error renaming group: ' + e.error.message);
+      });
+    }
+
+    if (!got_option) {
+      options.list = true;
+    }
+
+    if (options.list) {
+      grouplib.get_groups().then(function(groups) {
+        console.log(prettyjson.render(groups));
+      }).catch(function(e) {
+        console.log('Error listing groups: ' + e.error.message);
+      });
+    }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync groups');
+    console.log('    $ linksync groups -a work');
+    console.log('    $ linksync groups -d work');
+    console.log('    $ linksync groups -r 1 schoolwork');
+    console.log('    $ linksync groups -f school');
     console.log();
   });
 
