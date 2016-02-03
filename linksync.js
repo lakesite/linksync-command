@@ -96,10 +96,10 @@ program
 
 program
   .command('update [id]')
-  .option("-t, --tag [tag1,tag2,...]", "optional new comma separated tag associations")
-  .option("-g, --group [group1,group2,...]", "optional new comma separated group associations")
-  .option("-d, --description [description]", "optional new description")
-  .option("-u, --url [url]", "optional new url")
+  .option("-t, --tag [tag1,tag2,...]", "set optional new comma separated tag associations")
+  .option("-g, --group [group1,group2,...]", "set optional new comma separated group associations")
+  .option("-d, --description [description]", "set optional new description")
+  .option("-u, --url [url]", "set optional new url")
   .description('Update a link by its id')
   .action(function(id, options) {
     linklib.update_link(id, options.url, options.description).then(function(response) {
