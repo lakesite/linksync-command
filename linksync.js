@@ -102,17 +102,6 @@ program
   .option("-u, --url [url]", "optional new url")
   .description('Update a link by its id')
   .action(function(id, options) {
-    if (options.tag) {
-      taglib.add_tags(option_list(options.tag)).then(function(tags) {
-        linktaglib.add_linktags(id, tags);
-      });
-    }
-    if (options.group) {
-      grouplib.add_groups(option_list(options.group)).then(function(groups) {
-        linkgrouplib.add_linkgroups(id, groups);
-      });
-    }
-
     linklib.update_link(id, options.url, options.description).then(function(response) {
       console.log('Updated link, response: ' + JSON.stringify(response));
     }).catch(function(e) {
@@ -130,9 +119,6 @@ program
   .command('remove [id]')
   .description('Remove a link by id')
   .action(function(id, options) {
-    // needs to cascade delete from LinkTags
-    // https://github.com/strongloop/loopback-datasource-juggler/issues/145
-    // https://gist.github.com/zbarbuto/add938efd9653c7c6c14
     linklib.delete_by_id(id).then(function(response) {
       console.log('Link removed, response: %s', JSON.stringify(response));
     }).catch(function(e) {
