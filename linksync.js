@@ -380,4 +380,34 @@ program
   });
 
 
+program
+  .command('settings')
+  .description('List and update system settings')
+  .option("-s, --syncroot [path]", "set the syncroot path")
+  .action(function(options) {
+    var got_option = false;
+
+    if (options.syncroot) {
+      got_option = true;
+      console.log('setting syncroot path to: ' + options.syncroot);
+      settings.set("syncroot", options.syncroot);
+      settings.save();
+    }
+
+    if (!got_option) {
+      console.log('System defaults: ');
+      console.log(prettyjson.render(settings.stores.defaults.store));
+      console.log();
+      console.log('System settings: ');
+      console.log(prettyjson.render(settings.stores.file.store));
+      console.log();
+    }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync list');
+    console.log();
+  });
+
+
 program.parse(process.argv);
