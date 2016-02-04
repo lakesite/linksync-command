@@ -1,4 +1,5 @@
 {
   "API": "http://localhost:5979/api",
   "syncroot": "./syncroot/",
+  "exportpath": "./exports/"
 }

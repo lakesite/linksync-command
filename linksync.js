@@ -26,12 +26,13 @@ const
   q = require('q'),
   request = require('request'),
 
-  linklib = require('./lib/links'),
+  exporter = require('./lib/export'),
   grouplib = require('./lib/groups'),
-  taglib = require('./lib/tags'),
   linkgrouplib = require('./lib/linkgroups'),
+  linklib = require('./lib/links'),
   linktaglib = require('./lib/linktags'),
-  settings = require('./lib/settings');
+  settings = require('./lib/settings'),
+  taglib = require('./lib/tags');
 
 
 function option_list(val) {
@@ -402,6 +403,30 @@ program
       console.log(prettyjson.render(settings.stores.file.store));
       console.log();
     }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync list');
+    console.log();
+  });
+
+
+program
+  .command('exporter')
+  .description('Exports data from the system')
+  .option("-p, --path [path]", "set the path for export.zip")
+  .action(function(options) {
+    var got_option = false;
+
+    if (options.path) {
+      got_option = true;
+      console.log('setting export path to: ' + options.path);
+      settings.set("exportpath", options.path);
+      settings.save();
+    }
+
+    exporter.export();
+
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
