@@ -6,14 +6,16 @@
   "version": "0.0.1",
   "author": "Andrew Duncan",
   "copyright": "Copyright 2016 Andrew Duncan",
+  "license": "GPL-2.0",
   "main": "linksync.js",
   "dependencies": {
     "commander": "~2.9.0",
-    "request": "~2.67.0",
-    "prettyjson": "~1.1.3",
-    "nconf": "~0.8.4",
     "jszip": "~2.5.0",
-    "oboe": "~2.1.2"
+    "nconf": "~0.8.4",
+    "oboe": "~2.1.2",
+    "prettyjson": "~1.1.3",
+    "request": "~2.67.0",
+    "simplecrawler": "^0.6.0"
   },
   "repository": {
     "type": "git",
