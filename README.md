@@ -2,15 +2,30 @@
 
 Command line interface to LinkSync.
 
-# Settings #
+# Configuration #
 
-The API endpoint is defined under lib/settings.js, along with any other changes.
-By default this is http://localhost:5979/api
+See config.json.example for configuration settings.  Save this file as config.json to override the defaults that are defined in lib/settings.js.
 
 ## Running ##
 
+Help and examples on various commands can be queried after installing dependencies and running with the --help option:
+
 	$ npm install
 	$ node --harmony linksync.js --help
+
+## Export/Import ##
+
+The default path for exports and imports lives under ./exports/, which will
+have exports.zip when you run the exporter command against the API:
+
+	$ node --harmony linksync.js exporter
+
+For importing, the same file will be unzipped to exports/import.json, and then
+streamed to oboe so we don't load a potentially large JSON object in memory:
+
+	$ node --harmony linksync.js importer
+
+The import process will also wipe the database behind the API.
 
 ## Examples ##
 
@@ -20,3 +35,7 @@ By default this is http://localhost:5979/api
 	$ linksync remove https://lobste.rs # or by ID
 	$ linksync add https://vimeo.com/62232896 Mr. Sprinkles
 	$ linksync sync 1 # download mr sprinkles media via vimeo plugin
+
+## License ##
+
+GNU GPL version 2.
