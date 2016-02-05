@@ -10,8 +10,9 @@ See config.json.example for configuration settings.  Save this file as config.js
 
 Help and examples on various commands can be queried after installing dependencies and running with the --help option:
 
+	$ nvm use 5.0
 	$ npm install
-	$ node --harmony linksync.js --help
+	$ node --harmony --harmony_default_parameters linksync.js --help
 
 ## Export/Import ##
 
