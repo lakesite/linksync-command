@@ -27,6 +27,7 @@ const
   request = require('request'),
 
   exporter = require('./lib/export'),
+  importer = require('./lib/import'),
   grouplib = require('./lib/groups'),
   linkgrouplib = require('./lib/linkgroups'),
   linklib = require('./lib/links'),
@@ -430,7 +431,31 @@ program
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
-    console.log('    $ linksync list');
+    console.log('    $ linksync exporter');
+    console.log();
+  });
+
+
+program
+  .command('importer')
+  .description('Imports data from an export.zip file.')
+  .option("-p, --path [path]", "set the path for export.zip")
+  .action(function(options) {
+    var got_option = false;
+
+    if (options.path) {
+      got_option = true;
+      console.log('setting export path to: ' + options.path);
+      settings.set("exportpath", options.path);
+      settings.save();
+    }
+
+    importer.import();
+
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync importer');
     console.log();
   });
 
