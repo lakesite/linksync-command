@@ -33,6 +33,7 @@ const
   linklib = require('./lib/links'),
   linktaglib = require('./lib/linktags'),
   settings = require('./lib/settings'),
+  sync = require('./lib/sync'),
   taglib = require('./lib/tags');
 
 
@@ -421,7 +422,7 @@ program
 
     if (options.path) {
       got_option = true;
-      console.log('setting export path to: ' + options.path);
+      console.log('setting syncroot path to: ' + options.path);
       settings.set("exportpath", options.path);
       settings.save();
     }
@@ -451,6 +452,30 @@ program
     }
 
     importer.import();
+
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ linksync importer');
+    console.log();
+  });
+
+
+program
+  .command('sync [id]')
+  .description('synchronize link content.')
+  .option("-p, --path [path]", "set the path for syncroot")
+  .action(function(id, options) {
+    var got_option = false;
+
+    if (options.path) {
+      got_option = true;
+      console.log('setting syncroot path to: ' + options.syncroot);
+      settings.set("syncroot", options.syncroot);
+      settings.save();
+    }
+
+    sync.sync(id);
 
   }).on('--help', function() {
     console.log('  Examples:');
