@@ -364,7 +364,7 @@ program
   .description('List links saved to the system')
   .action(function(options) {
     request.get(
-      settings.API + '/links',
+      settings.get('API') + '/links',
       {
         json: true
       },

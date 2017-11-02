@@ -12,19 +12,19 @@ Help and examples on various commands can be queried after installing dependenci
 
 	$ nvm use 5.0
 	$ npm install
-	$ node --harmony --harmony_default_parameters linksync.js --help
+	$ node linksync.js --help
 
 ## Export/Import ##
 
 The default path for exports and imports lives under ./exports/, which will
 have exports.zip when you run the exporter command against the API:
 
-	$ node --harmony linksync.js exporter
+	$ node linksync.js exporter
 
 For importing, the same file will be unzipped to exports/import.json, and then
 streamed to oboe so we don't load a potentially large JSON object in memory:
 
-	$ node --harmony linksync.js importer
+	$ node linksync.js importer
 
 The import process will also wipe the database behind the API.
 
