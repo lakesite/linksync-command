@@ -10,7 +10,6 @@ See config.json.example for configuration settings.  Save this file as config.js
 
 Help and examples on various commands can be queried after installing dependencies and running with the --help option:
 
-	$ nvm use 5.0
 	$ npm install
 	$ node linksync.js --help
 
@@ -30,11 +29,11 @@ The import process will also wipe the database behind the API.
 
 ## Examples ##
 
-	$ linksync add -t programming,technology,aggregator https://lobste.rs A technology-focused link-aggregation site.
+	$ linksync add -t programming,technology,aggregator https://lobste.rs "A technology-focused link-aggregation site."
 	$ linksync findtag aggregator
 	$ linksync list
 	$ linksync remove https://lobste.rs # or by ID
-	$ linksync add https://vimeo.com/62232896 Mr. Sprinkles
+	$ linksync add https://vimeo.com/62232896 "Mr. Sprinkles"
 	$ linksync sync 1 # download mr sprinkles media via vimeo plugin
 
 ## License ##
