@@ -10,7 +10,7 @@
   "main": "linksync.js",
   "dependencies": {
     "commander": "~2.9.0",
-    "jszip": "~2.5.0",
+    "jszip": "~3.7.0",
     "nconf": "~0.8.4",
     "node-fs": "^0.1.7",
     "oboe": "~2.1.2",
